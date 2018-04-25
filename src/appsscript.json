@@ -1,0 +1,11 @@
+{
+  "timeZone": "Asia/Bangkok",
+  "dependencies": {
+    "libraries": [{
+      "userSymbol": "TamotsuX",
+      "libraryId": "19cYeZpDb9KiMV_fY5wNQjcPiwDMLDoxslulErvWctLI44AY0SExCWu5l",
+      "version": "1"
+    }]
+  },
+  "exceptionLogging": "STACKDRIVER"
+}
