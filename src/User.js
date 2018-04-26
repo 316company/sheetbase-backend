@@ -7,9 +7,7 @@ var User = {
    */
   create: function (email, password) {
     var UserTable = Model.get('User');
-    var CONFIG = Config.get();
-
-    
+    var CONFIG = Config.get();    
 
     if(!UserTable) return {
       error: true,
@@ -60,13 +58,7 @@ var User = {
     delete userData.password;
     
     // create token
-    var seconds = (new Date().getTime()) / 1000;
     var payload = {
-      "iss": 'contact@sheetbase.net',
-      "sub": 'contact@sheetbase.net',
-      "aud": "https://sheetbase.net/identity",
-      "iat": seconds,
-      "exp": seconds+(24*60*60),
       uid: userData.uid
     };
     var token = KJUR.jws.JWS.sign(null, {alg: "HS256", typ: "JWT"}, payload, {"utf8": CONFIG.encryptionKey});    
@@ -117,17 +109,85 @@ var User = {
     
     
     // create token
-    var seconds = (new Date().getTime()) / 1000;
     var payload = {
-      "iss": 'contact@sheetbase.net',
-      "sub": 'contact@sheetbase.net',
-      "aud": "https://sheetbase.net/identity",
-      "iat": seconds,
-      "exp": seconds+(24*60*60),
       uid: user.uid
     };
     var token = KJUR.jws.JWS.sign(null, {alg: "HS256", typ: "JWT"}, payload, {"utf8": CONFIG.encryptionKey});
-    return { token: token, user: user };
+    return { token: token, user: Helper.modifyValue(user) };
+  },
+
+
+  /**
+   * update user profile
+   */
+  profile: function (uid, profileData) {
+    if(!profileData) return {
+      error: true,
+      code: 'auth/missing-info',
+      message: 'Missing information!'
+    };
+
+    if(!(profileData instanceof Object)) return {
+      error: true,
+      code: 'auth/wrong-info',
+      message: 'Profile data must be an object!'
+    };
+
+    // TODO: validate data
+
+    var _this = this;
+    var UserTable = Model.get('User');
+    
+    var user = UserTable.where({ uid: uid }).first();
+
+    if(!user) return {
+      error: true,
+      code: 'auth/user-not-exist',
+      message: 'User doesnt exist!'
+    };
+
+    // remove dedicated fields
+    delete profileData['#'];
+    delete profileData.uid;
+    delete profileData.timestamp;
+    delete profileData.email;
+    delete profileData.password;
+    delete profileData.token;
+    delete profileData.lastLogin;
+    delete profileData.oobCode;
+    delete profileData.providerData;
+
+    // save data
+    for(var key in profileData) {
+      if(profileData[key] instanceof Object) {
+        user[key] = JSON.stringify(profileData[key]);
+      } else {
+        user[key] = profileData[key];
+      }
+    }
+
+    var savedUser = user.save();
+    if(!savedUser) return {
+      error: true,
+      code: 'auth/update-profile-fails',
+      message: 'Update profile fails!'
+    };
+
+    return {
+      user: Helper.modifyValue(user)
+    }
+  },
+
+
+  /**
+   * verify user token
+   */
+  verify: function (token) {
+    var CONFIG = Config.get();
+    var isValid = KJUR.jws.JWS.verify(token, {"utf8": CONFIG.encryptionKey}, ['HS256']);
+    if(!isValid) return false;
+    var decodedData = KJUR.jws.JWS.parse(token);
+    return decodedData.payloadObj.uid; 
   }
   
 
