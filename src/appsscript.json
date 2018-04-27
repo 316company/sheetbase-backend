@@ -5,6 +5,11 @@
       "userSymbol": "TamotsuX",
       "libraryId": "19cYeZpDb9KiMV_fY5wNQjcPiwDMLDoxslulErvWctLI44AY0SExCWu5l",
       "version": "1"
+    },
+    {
+      "userSymbol": "Jsrsasign",
+      "libraryId": "1MCTN_wjd1T5SB6jr0S9HqgNnYsTmLATePrsp2-LrmhsrUlbxXOTPJ_3N",
+      "version": "1"
     }]
   },
   "exceptionLogging": "STACKDRIVER"

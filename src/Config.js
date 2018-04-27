@@ -1,39 +1,41 @@
-var Config = {
+/**
+* Config Class
+* @namespace
+*/
+var Config = (function (__this) {
+
+    __this.data = {};
 
     /**
-     * CONFIG DATA
-     * 
-    */
-    _data_: {},
-
-
-
-    /**
-     * SET CONFIG DATA
+     * Set config
      * @constructor
      * @param {object} data - Object of configuration data
+     * @return {ConfigData} 
      * 
     */
-    set: function (data) {
+    __this.set = function (data) {
         var _this = this;
 
-        // TODO: validate data
+        if(!data || !(data instanceof Object)) return; 
 
         for(var key in data) {
-            _this._data_[key] = data[key];
+            _this.data[key] = data[key];
         }
-        return _this._data_;
-    },
-
+        return _this.data;
+    }
 
     /**
-     * GET CONFIG DATA
+     * Get config
      * @param {string} key - Configuration key
+     * @return {ConfigData|ConfigDataValue|null}
      * 
     */
-    get: function (key) {
+    __this.get = function (key) {
         var _this = this;
-        if(key) return _this._data_[key];
-        return _this._data_;
+        if(key) return _this.data[key];
+        return _this.data;
     }
-}
+
+    return __this;
+
+})(Config||{});

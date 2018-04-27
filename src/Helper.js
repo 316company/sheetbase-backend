@@ -1,10 +1,15 @@
-var Helper = {
+/**
+* Helper Class
+* @namespace
+*/
+var Helper = (function (__this) {
 
   /**
    * Turn object into array
    * @param {object} object - JSON data
+   * @return {array}
    */
-  o2a: function (object) {
+  __this.o2a = function (object) {
     var array = [];
     for (var key in object) {
       if (typeof object[key] === 'object') {
@@ -18,14 +23,27 @@ var Helper = {
       array.push(object[key]);
     }
     return array;
-  },
+  }
 
-
+  /**
+   * Turn array into object
+   * @param {array} array - input array
+   * @return {object}
+   */
+  __this.a2o = function (array) {
+    var object = {};
+    for(var i = 0; i < (array||[]).length; i++) {
+      var item = array[i];
+      object[item['key'] || item['slug'] || ('' + item['id']) || ('' + item['#']) || ('' + Math.random() * 1E20)] = item;
+    }
+    return object;
+  }
 
   /**
    * Generate unique UID
+   * @return {string} 28 characters uid
    */
-  uid: function () {
+  __this.uid = function () {
     var max = 21;
     var ASCII_CHARS = '-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz';
     var lastPushTime = 0;
@@ -55,15 +73,14 @@ var Helper = {
       id += ASCII_CHARS.charAt(lastRandChars[i]);
     }
     return id.substr(1, 28);
-  },
-
-
+  }
 
   /**
-   * 
+   * Push id
+   * @return {string} 20 chracters push id
    * 
   */
-  id: function () {
+  __this.id = function () {
     var _this = this;
 
     var PUSH_CHARS = '-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz';
@@ -95,35 +112,22 @@ var Helper = {
     }
     if (id.length != 20) _this.id();
     return id;
-  },
-
-
-
-  /**
-   * Typed modification cell data
-   * @param {object} item - Data in JSON
-   */
-  modifyValue: function (item) {
-    for (var key in item) {
-      //transform JSON where possible
-      try {
-        item[key] = JSON.parse(item[key]);
-      } catch (e) { }
-
-      // transform number
-      if (!isNaN(item[key]) && Number(item[key]) % 1 === 0) item[key] = parseInt(item[key]);
-      if (!isNaN(item[key]) && Number(item[key]) % 1 !== 0) item[key] = parseFloat(item[key]);
-
-      // transform boolean value
-      if (typeof item[key] === 'string' || item[key] instanceof String) item[key] = ((item[key]).toLowerCase() === 'true') || ((item[key]).toLowerCase() === 'false' ? false : item[key]);
-
-      // delete null key
-      if (item[key] === '' || item[key] === null || item[key] === undefined) {
-        delete item[key];
-      }
-    }
-    return item;
   }
 
-}
+  /**
+   * Generate guid
+   * @return {string}
+   */
+  __this.guid = function () {
+    function s4() {
+      return Math.floor((1 + Math.random()) * 0x10000)
+        .toString(16)
+        .substring(1);
+    }
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+  }
+
+  return __this;
+
+})(Helper||{});
 

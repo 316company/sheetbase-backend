@@ -1,46 +1,52 @@
-var Model = {
+/**
+* Model Class
+* @namespace
+*/
+var Model = (function (__this) {
+
+    __this.data = {};
+
+
 
     /**
-     * MODEL DATA
-     * 
-    */
-    _data_: {},
-
-
-
-    /**
-     * CREATE MODELS
+     * Create models
      * @constructor
      * @param {object} data - Object of model data
+     * @return {ModelData}
      * 
     */
-    create: function (data) {
+    __this.create = function (data) {
         var _this = this;
 
-        // TODO: validate data
+        if(!data || !(data instanceof Object)) return;
         
         TamotsuX.initialize(SpreadsheetApp.openById(Config.get('database')));
         for(var key in data) {
-            var spreadsheet = SpreadsheetApp.openById(Config.get(key));
+            if(!data[key] || !(data[key] instanceof Object)) continue;
+            var spreadsheetId = Config.get(key);
             for(var key2 in data[key]) {
-                _this._data_[key2] = TamotsuX.Table.define({
-                    spreadsheet: spreadsheet,
+                _this.data[key2] = TamotsuX.Table.define({
+                    spreadsheet: spreadsheetId ? SpreadsheetApp.openById(spreadsheetId): null,
                     sheetName: data[key][key2],
                 });
             }
         }
-        return _this._data_;
-    },
+        return _this.data;
+    }
 
 
     /**
      * GET MODEL DATA
      * @param {string} key - Model key
+     * @return {ModelData|ModelDataValue|null}
      * 
     */
-    get: function (key) {
+    __this.get = function (key) {
         var _this = this;
-        if(key) return _this._data_[key];
-        return _this._data_;
+        if(key) return _this.data[key];
+        return _this.data;
     }
-}
+
+    return __this;
+
+})(Model||{});
