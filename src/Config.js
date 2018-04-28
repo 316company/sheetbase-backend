@@ -2,9 +2,9 @@
 * Config Class
 * @namespace
 */
-var Config = (function (__this) {
+var Config = (function (_Config) {
 
-    __this.data = {};
+    _Config.data = {};
 
     /**
      * Set config
@@ -13,7 +13,7 @@ var Config = (function (__this) {
      * @return {ConfigData} 
      * 
     */
-    __this.set = function (data) {
+    _Config.set = function (data) {
         var _this = this;
 
         if(!data || !(data instanceof Object)) return; 
@@ -30,12 +30,12 @@ var Config = (function (__this) {
      * @return {ConfigData|ConfigDataValue|null}
      * 
     */
-    __this.get = function (key) {
+    _Config.get = function (key) {
         var _this = this;
         if(key) return _this.data[key];
         return _this.data;
     }
 
-    return __this;
+    return _Config;
 
 })(Config||{});

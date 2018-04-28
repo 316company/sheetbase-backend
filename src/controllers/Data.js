@@ -2,12 +2,12 @@
  * Data Class
  * @namespace
  */
-var Data = (function (__this) {
+var Data = (function (_Data) {
 
-    __this.get = function (tableName, customRange) {
+    _Data.get = function (tableName, customRange) {
         var _this = this;
         if(!tableName)
-            return XError.make(
+            return AppError.make(
                 'data/no-table-name',
                 'You must give the table name!'
             );
@@ -27,7 +27,7 @@ var Data = (function (__this) {
      * @param {Array} values - Data[][]
      * @param {boolean} noHeaders - Has header row?
      */
-    __this.transform = function (values, noHeaders) {
+    _Data.transform = function (values, noHeaders) {
         var _this = this;
         var items = [];
 
@@ -58,7 +58,7 @@ var Data = (function (__this) {
    * @param {object} item - Data in JSON
    * @return {object}
    */
-  __this.finalize = function (item) {
+  _Data.finalize = function (item) {
     for (var key in item) {
       //transform JSON where possible
       try {
@@ -80,6 +80,6 @@ var Data = (function (__this) {
     return item;
   }
 
-  return __this;
+  return _Data;
 
 })(Data||{});

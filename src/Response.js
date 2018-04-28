@@ -2,14 +2,14 @@
 * Response Class
 * @namespace
 */
-var Response = (function (__this) {
+var Response = (function (_Response) {
 
     /**
      * Response JSON
      * @param {object} object - JSON data
      * @return {ContentServiceJSONData}
      */
-    __this.json = function (object) {
+    _Response.json = function (object) {
         var JSONString = JSON.stringify(object);
         var JSONOutput = ContentService.createTextOutput(JSONString);
         JSONOutput.setMimeType(ContentService.MimeType.JSON);
@@ -22,14 +22,14 @@ var Response = (function (__this) {
      * @param {string} html - HTML text
      * @return {HtmlServiceHTMLData}
      */
-    __this.html = function (html) {
+    _Response.html = function (html) {
         return HtmlService.createHtmlOutput(html);
     }
 
     /**
      * return home message
      */
-    __this.home = function () {
+    _Response.home = function () {
         var _this = this;
         return _this.json({
             "name": "Sheetbase Backend",
@@ -42,7 +42,7 @@ var Response = (function (__this) {
      * Return unauthorization message
      * @return {UnauthorizedMessage}
      */
-    __this.unauthorized = function () {
+    _Response.unauthorized = function () {
         var _this = this;
         return _this.json({
             error: true,
@@ -51,6 +51,6 @@ var Response = (function (__this) {
         });
     }
 
-    return __this;
+    return _Response;
     
 })(Response||{});

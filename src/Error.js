@@ -1,10 +1,10 @@
 /**
- * XError Class
+ * AppError Class
  * @namespace
  */
-var XError = (function (__this) {
+var AppError = (function (_AppError) {
 
-    __this.make = function (code, message) {
+    _AppError.make = function (code, message) {
         var err = {
             error: true
         };
@@ -13,6 +13,6 @@ var XError = (function (__this) {
         return err;
     }
 
-    return __this;
+    return _AppError;
 
-})(XError||{});
+})(AppError||{});

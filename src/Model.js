@@ -2,9 +2,9 @@
 * Model Class
 * @namespace
 */
-var Model = (function (__this) {
+var Model = (function (_Model) {
 
-    __this.data = {};
+    _Model.data = {};
 
 
 
@@ -15,7 +15,7 @@ var Model = (function (__this) {
      * @return {ModelData}
      * 
     */
-    __this.create = function (data) {
+    _Model.create = function (data) {
         var _this = this;
 
         if(!data || !(data instanceof Object)) return;
@@ -41,12 +41,12 @@ var Model = (function (__this) {
      * @return {ModelData|ModelDataValue|null}
      * 
     */
-    __this.get = function (key) {
+    _Model.get = function (key) {
         var _this = this;
         if(key) return _this.data[key];
         return _this.data;
     }
 
-    return __this;
+    return _Model;
 
 })(Model||{});

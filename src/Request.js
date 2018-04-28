@@ -2,7 +2,7 @@
 * Request Class
 * @namespace
 */
-var Request = (function (__this) {
+var Request = (function (_Request) {
 
   /**
    * Get param
@@ -10,7 +10,7 @@ var Request = (function (__this) {
    * @param {string} key - param key
    * @return {RequestQueryData|null}
   */
-  __this.param = function (e, key) {
+  _Request.param = function (e, key) {
     if(!e) return;
     var params = e.parameter;
     if (key) return params[key];
@@ -25,7 +25,7 @@ var Request = (function (__this) {
     * @param {string} key - body key
     * @return {RequestBodyData|null}
    */
-  __this.body = function (e, key) {
+  _Request.body = function (e, key) {
     if(!e) return;
     var body = JSON.parse(e.postData ? e.postData.contents : '{}');
     if (key) return body[key];
@@ -39,13 +39,13 @@ var Request = (function (__this) {
    * @param {object} e - Event from doGet(), doPost()
    * @return {boolean}
    */
-  __this.isAuthorized = function (e) {
+  _Request.isAuthorized = function (e) {
     var _this = this;
     if(!e) return;
     var apiKey = _this.body(e, 'apiKey') || _this.param(e, 'apiKey');
     return Config.get('apiKey') === apiKey;
   }
 
-  return __this;
+  return _Request;
 
 })(Request||{});

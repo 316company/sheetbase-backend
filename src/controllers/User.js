@@ -2,29 +2,29 @@
 * User Class
 * @namespace
 */
-var User = (function (__this) {
+var User = (function (_User) {
 
   /**
    * Create new user
    * @param {string} email - User email
    * @param {string} password - User password
-   * @return {AuthUserAndToken|XError}
+   * @return {AuthUserAndToken|AppError}
    */
-  __this.create = function (email, password) {
+  _User.create = function (email, password) {
     var CONFIG = Config.get();      
 
     if(!email || !password)
-      return XError.make(
+      return AppError.make(
         'auth/missing-credential',
         'Missing email or password!'
       );    
     if(!(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i).test(email))
-      return XError.make(
+      return AppError.make(
         'auth/invalid-email',
         'Invalid email format!'
       );    
     if((''+ password).length < 7)
-      return XError.make(
+      return AppError.make(
         'auth/invalid',
         'Password must greater than 7 characters!'
       );
@@ -34,7 +34,7 @@ var User = (function (__this) {
     // check exists
     var user = UserTable.where({ email: email }).first();
     if(user)
-      return XError.make(
+      return AppError.make(
         'auth/user-exists',
         'User exists!'
       );
@@ -52,7 +52,7 @@ var User = (function (__this) {
     // append data
     var userCreated = UserTable.create(userData);
     if(!userCreated)
-      return XError.make(
+      return AppError.make(
         'auth/action-fails',
         'Can not create user, please try again!'
       );
@@ -76,13 +76,13 @@ var User = (function (__this) {
    * Log user in
    * @param {string} email - User email
    * @param {string} password - User password
-   * @return {AuthUserAndToken|XError}
+   * @return {AuthUserAndToken|AppError}
    */
-  __this.login = function (email, password) {
+  _User.login = function (email, password) {
     var CONFIG = Config.get();
 
     if(!email || !password)
-      return XError.make(
+      return AppError.make(
         'auth/missing-credential',
         'Missing email or password.'
       );
@@ -92,14 +92,14 @@ var User = (function (__this) {
     // check exists
     var user = UserTable.where({ email: email }).first();
     if(!user)
-      return XError.make(
+      return AppError.make(
         'auth/user-not-exists',
         'User doesn\'t exists!'
       );
     
     var passwordHash = Jsrsasign.KJUR.crypto.Util.sha256(''+ password);
     if(user._password !== passwordHash)
-      return XError.make(
+      return AppError.make(
         'auth/wrong-password',
         'Wrong password!'
       );
@@ -128,7 +128,7 @@ var User = (function (__this) {
    * @param {string} token - User token
    * @return {string}
    */
-  __this.verify = function (token) {
+  _User.verify = function (token) {
     var CONFIG = Config.get();
     var isValid = Jsrsasign.KJUR.jws.JWS.verify(token||'', {"utf8": CONFIG.encryptionKey}, ['HS256']);
     if(!isValid) return false;
@@ -139,11 +139,11 @@ var User = (function (__this) {
   /**
    * get user profile
    * @param {string} uid - User uid
-   * @return {AuthUser|XError}
+   * @return {AuthUser|AppError}
    */
-  __this.profile = function (uid) {
+  _User.profile = function (uid) {
     if(!uid)
-      return XError.make(
+      return AppError.make(
         'auth/missing-info',
         'Missing information!'
       );
@@ -152,7 +152,7 @@ var User = (function (__this) {
     
     var user = UserTable.where({ uid: uid }).first();
     if(!user)
-      return XError.make(
+      return AppError.make(
         'auth/user-not-exists',
         'User doesn\'t exists!'
       );
@@ -173,16 +173,16 @@ var User = (function (__this) {
    * update user profile
    * @param {string} uid - User uid
    * @param {object} profileData - Data to be updated
-   * @return {AuthUser|XError}
+   * @return {AuthUser|AppError}
    */
-  __this.updateProfile = function (uid, profileData) {
+  _User.updateProfile = function (uid, profileData) {
     if(!uid || !profileData)
-      return XError.make(
+      return AppError.make(
         'auth/missing-info',
         'Missing information!'
       );
     if(!(profileData instanceof Object))
-      return XError.make(
+      return AppError.make(
         'auth/invalid-data',
         'Profile data must be an object!'
       );
@@ -191,7 +191,7 @@ var User = (function (__this) {
     
     var user = UserTable.where({ uid: uid }).first();
     if(!user)
-      return XError.make(
+      return AppError.make(
         'auth/user-not-exists',
         'User doesn\'t exists!'
       );
@@ -217,7 +217,7 @@ var User = (function (__this) {
 
     var userSaved = user.save();
     if(!userSaved)
-      return XError.make(
+      return AppError.make(
         'auth/action-fails',
         'Can not create user, please try again!'
       );
@@ -239,9 +239,9 @@ var User = (function (__this) {
    * @param {string} oobCode - OOB code
    * @return {Success}
    */
-  __this.verifyOobCode = function (oobCode) {
+  _User.verifyOobCode = function (oobCode) {
     if(!oobCode)
-      return XError.make(
+      return AppError.make(
         'auth/missing-info',
         'Missing information!'
       );
@@ -250,7 +250,7 @@ var User = (function (__this) {
     
     var user = UserTable.where({ _oobCode: oobCode }).first();
     if(!user)
-      return XError.make(
+      return AppError.make(
         'auth/user-not-exists',
         'User doesn\'t exists!'
       );
@@ -266,9 +266,9 @@ var User = (function (__this) {
    * @param {string} email - User email
    * @return {Success}
    */
-  __this.sendPasswordResetEmail = function (email) {
+  _User.sendPasswordResetEmail = function (email) {
     if(!email)
-      return XError.make(
+      return AppError.make(
         'auth/missing-info',
         'Missing information!'
       );
@@ -277,12 +277,12 @@ var User = (function (__this) {
     
     var user = UserTable.where({ email: email }).first();
     if(!user)
-      return XError.make(
+      return AppError.make(
         'auth/user-not-exists',
         'User doesn\'t exists!'
       );
     
-    user['_oobCode'] = Helper.guid();
+    user['_oobCode'] = Utilities.getUuid();
     user.save();
 
     // send email
@@ -300,7 +300,7 @@ var User = (function (__this) {
     try {
       GmailApp.sendEmail(recipient, title, bodyText, options);
     } catch(error) {
-      return XError.make(
+      return AppError.make(
         'mail/not-sent',
         'Email not sent!'
       );
@@ -318,15 +318,15 @@ var User = (function (__this) {
    * @param {string} newPassword - New password
    * @return {Success}
    */
-  __this.doPasswordReset = function (oobCode, newPassword) {
+  _User.doPasswordReset = function (oobCode, newPassword) {
     if(!oobCode || !newPassword)
-      return XError.make(
+      return AppError.make(
         'auth/missing-info',
         'Missing information!'
       );
 
     if((''+ newPassword).length < 7)
-      return XError.make(
+      return AppError.make(
         'auth/invalid',
         'Password must greater than 7 characters!'
       );
@@ -335,7 +335,7 @@ var User = (function (__this) {
     
     var user = UserTable.where({ _oobCode: oobCode }).first();
     if(!user)
-      return XError.make(
+      return AppError.make(
         'auth/user-not-exists',
         'User doesn\'t exists!'
       );
@@ -345,7 +345,7 @@ var User = (function (__this) {
     
     var userSaved = user.save();
     if(!userSaved)
-      return XError.make(
+      return AppError.make(
         'auth/action-fails',
         'Can not update user, please try again!'
       );
@@ -356,6 +356,6 @@ var User = (function (__this) {
     };
   }
 
-  return __this;
+  return _User;
 
 })(User||{});

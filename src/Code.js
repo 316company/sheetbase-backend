@@ -9,21 +9,14 @@
  * 
 */
 function initialize(SHEETBASE_CONFIG, MODEL_CONFIG, APP_CONFIG) {
-    if(!SHEETBASE_CONFIG || !MODEL_CONFIG) {
-        throw new Error('Missing data!');
-        return false;
-    }
-    if(!(SHEETBASE_CONFIG instanceof Object) || !(MODEL_CONFIG instanceof Object)) {
-        throw new Error('Config data must be an object');
-        return false;
-    }
-    if(
-        !SHEETBASE_CONFIG.apiKey ||
-        !SHEETBASE_CONFIG.database
-    ) {
-        throw new Error('Config data must contain \'apiKey\' and \'database\' field.');
-        return false;
-    }
+    if(!SHEETBASE_CONFIG || !MODEL_CONFIG)
+        throw new Error('Missing config data.');
+    
+    if(!(SHEETBASE_CONFIG instanceof Object) || !(MODEL_CONFIG instanceof Object))
+        throw new Error('Invalid config data.');
+
+    if(!SHEETBASE_CONFIG.apiKey || !SHEETBASE_CONFIG.database || !SHEETBASE_CONFIG.backend)
+        throw new Error('Config data must contain \'apiKey\', \'database\' and \'backend\' field.');
 
     var ALL_CONFIG = SHEETBASE_CONFIG; 
     if(APP_CONFIG && (APP_CONFIG instanceof Object)) {

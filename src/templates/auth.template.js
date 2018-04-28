@@ -1,6 +1,6 @@
-var TemplateAuth = (function (__this) {
+var TemplateAuth = (function (_TemplateAuth) {
     
-    __this.passwordReset = function (user) {
+    _TemplateAuth.passwordReset = function (user) {
         var CONFIG = Config.get();
 
         var title = '';
@@ -36,6 +36,6 @@ var TemplateAuth = (function (__this) {
         };
     }
 
-    return __this;
+    return _TemplateAuth;
 
 })(TemplateAuth||{});

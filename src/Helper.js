@@ -2,14 +2,14 @@
 * Helper Class
 * @namespace
 */
-var Helper = (function (__this) {
+var Helper = (function (_Helper) {
 
   /**
    * Turn object into array
    * @param {object} object - JSON data
    * @return {array}
    */
-  __this.o2a = function (object) {
+  _Helper.o2a = function (object) {
     var array = [];
     for (var key in object) {
       if (typeof object[key] === 'object') {
@@ -30,7 +30,7 @@ var Helper = (function (__this) {
    * @param {array} array - input array
    * @return {object}
    */
-  __this.a2o = function (array) {
+  _Helper.a2o = function (array) {
     var object = {};
     for(var i = 0; i < (array||[]).length; i++) {
       var item = array[i];
@@ -43,7 +43,7 @@ var Helper = (function (__this) {
    * Generate unique UID
    * @return {string} 28 characters uid
    */
-  __this.uid = function () {
+  _Helper.uid = function () {
     var max = 21;
     var ASCII_CHARS = '-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz';
     var lastPushTime = 0;
@@ -80,7 +80,7 @@ var Helper = (function (__this) {
    * @return {string} 20 chracters push id
    * 
   */
-  __this.id = function () {
+  _Helper.id = function () {
     var _this = this;
 
     var PUSH_CHARS = '-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz';
@@ -118,7 +118,7 @@ var Helper = (function (__this) {
    * Generate guid
    * @return {string}
    */
-  __this.guid = function () {
+  _Helper.guid = function () {
     function s4() {
       return Math.floor((1 + Math.random()) * 0x10000)
         .toString(16)
@@ -127,7 +127,7 @@ var Helper = (function (__this) {
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
   }
 
-  return __this;
+  return _Helper;
 
 })(Helper||{});
 
