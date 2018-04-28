@@ -14,9 +14,10 @@ var POSTRoute = (function (_POSTRoute) {
         var params = Request.param(e)||{};
         var body = Request.body(e);
 
-        switch(params.e) {
+        var endpoint = params.e||''; endpoint = (endpoint.substr(0,1)==='/') ? endpoint: '/'+ endpoint;
+        switch(endpoint) {
 
-            case 'user/create':
+            case '/user/create':
                 var credential = body.credential || {};
                 return Response.json(
                     User.create(
@@ -26,7 +27,7 @@ var POSTRoute = (function (_POSTRoute) {
                 );
             break;
             
-            case 'user/login':
+            case '/user/login':
                 var credential = body.credential || {};
                 return Response.json(
                     User.login(
@@ -36,7 +37,7 @@ var POSTRoute = (function (_POSTRoute) {
                 );
             break;
 
-            case 'user/profile':
+            case '/user/profile':
                 var uid = User.verify(body.token);
                 if(!uid)
                     return Response.json(AppError.make(
@@ -48,19 +49,19 @@ var POSTRoute = (function (_POSTRoute) {
                 );
             break;
 
-            case 'auth/verifyCode':
+            case '/auth/verifyCode':
                 return Response.json(
                     User.verifyOobCode(body.oobCode)
                 );
             break;
 
-            case 'auth/passwordReset':
+            case '/auth/passwordReset':
                 return Response.json(
                     User.sendPasswordResetEmail(body.email)
                 );
             break;
 
-            case 'auth/setPassword':
+            case '/auth/setPassword':
                 return Response.json(
                     User.doPasswordReset(body.oobCode, body.password)
                 );
@@ -78,7 +79,7 @@ var POSTRoute = (function (_POSTRoute) {
              * @return {FileData|AppError}
              *
              */
-            case 'file':
+            case '/file':
                 return Response.json(
                     AppFile.set(body.file, body.folder)
                 );

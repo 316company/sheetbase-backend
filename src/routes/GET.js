@@ -14,15 +14,16 @@ var GETRoute = (function (_GETRoute) {
         var params = Request.param(e)||{};
         var body = Request.body(e);
 
-        switch(params.e) {
+        var endpoint = params.e||''; endpoint = (endpoint.substr(0,1)==='/') ? endpoint: '/'+ endpoint;
+        switch(endpoint) {
 
-            case 'data':
+            case '/data':
                 return Response.json(
                     Data.get(params.table, params.range)
                 );
             break;
         
-            case 'user/profile':
+            case '/user/profile':
                 var uid = User.verify(params.token);
                 if(!uid)
                     return Response.json(AppError.make(
@@ -32,14 +33,14 @@ var GETRoute = (function (_GETRoute) {
                 return Response.json(User.profile(uid));
             break;
         
-            case 'auth/action':
+            case '/auth/action':
                 return Response.html(
                     '<h1>Auth actions</h1>'+
                     '<p>Password reset, ...</p>'
                 );
             break;
 
-            case 'file':
+            case '/file':
                 return Response.json(
                     AppFile.get(params.id)
                 );
