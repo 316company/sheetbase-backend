@@ -8,11 +8,11 @@
  * @return {boolean}
  * 
 */
-function initialize(SHEETBASE_CONFIG, MODEL_CONFIG, APP_CONFIG) {
-    if(!SHEETBASE_CONFIG || !MODEL_CONFIG)
+function initialize(SHEETBASE_CONFIG, APP_CONFIG) {
+    if(!SHEETBASE_CONFIG)
         throw new Error('Missing config data.');
     
-    if(!(SHEETBASE_CONFIG instanceof Object) || !(MODEL_CONFIG instanceof Object))
+    if(!(SHEETBASE_CONFIG instanceof Object))
         throw new Error('Invalid config data.');
 
     if(!SHEETBASE_CONFIG.apiKey || !SHEETBASE_CONFIG.database || !SHEETBASE_CONFIG.backend)
@@ -25,7 +25,7 @@ function initialize(SHEETBASE_CONFIG, MODEL_CONFIG, APP_CONFIG) {
         }
     }
 
-    var configData = Config.set(ALL_CONFIG);
-    var modelData = Model.create(MODEL_CONFIG);
+    var configData = Config.set_(ALL_CONFIG);
+    var modelData = Model.create_();
     return (configData&&modelData) ? true: false;
 }

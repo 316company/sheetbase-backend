@@ -4,25 +4,7 @@
 */
 var Config = (function (_Config) {
 
-    _Config.data = {};
-
-    /**
-     * Set config
-     * @constructor
-     * @param {object} data - Object of configuration data
-     * @return {ConfigData} 
-     * 
-    */
-    _Config.set = function (data) {
-        var _this = this;
-
-        if(!data || !(data instanceof Object)) return; 
-
-        for(var key in data) {
-            _this.data[key] = data[key];
-        }
-        return _this.data;
-    }
+    _Config.data_ = {};
 
     /**
      * Get config
@@ -32,8 +14,26 @@ var Config = (function (_Config) {
     */
     _Config.get = function (key) {
         var _this = this;
-        if(key) return _this.data[key];
-        return _this.data;
+        if(key) return _this.data_[key];
+        return _this.data_;
+    }
+
+    /**
+     * Set config
+     * @constructor
+     * @param {object} data - Object of configuration data
+     * @return {ConfigData} 
+     * 
+    */
+    _Config.set_ = function (data) {
+        var _this = this;
+
+        if(!data || !(data instanceof Object)) return; 
+
+        for(var key in data) {
+            _this.data_[key] = data[key];
+        }
+        return _this.data_;
     }
 
     return _Config;

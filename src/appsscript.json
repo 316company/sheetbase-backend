@@ -10,6 +10,11 @@
       "userSymbol": "Jsrsasign",
       "libraryId": "1MCTN_wjd1T5SB6jr0S9HqgNnYsTmLATePrsp2-LrmhsrUlbxXOTPJ_3N",
       "version": "1"
+    },
+    {
+      "userSymbol": "Pluralize",
+      "libraryId": "13U-fcaWqa6zFHJzfr7X1AZmRi02sjoKbi-YqesHlGQAhqJoowsFEetcd",
+      "version": "1"
     }]
   },
   "exceptionLogging": "STACKDRIVER"
