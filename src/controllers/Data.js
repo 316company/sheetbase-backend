@@ -4,6 +4,8 @@
  */
 var Data = (function (_Data) {
 
+    // TODO: Custom modifiers
+
     _Data.get = function (tableName, customRange) {
         var _this = this;
         if(!tableName)
@@ -12,6 +14,12 @@ var Data = (function (_Data) {
                 'You must give the table name!'
             );
         
+        if(tableName.substr(0,1)==='_')
+            return AppError.make(
+                'data/private-data',
+                'Can not get private data!'
+            );
+
         try {
             var spreadsheet = SpreadsheetApp.openById(Config.get('database'));
             var range = spreadsheet.getRange(tableName +'!'+ (customRange||'A1:ZZ'));

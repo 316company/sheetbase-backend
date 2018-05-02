@@ -47,7 +47,10 @@ var GETRoute = (function (_GETRoute) {
             break;
               
             default:
-              return Response.home();
+              return Response.html(
+                '<h1>Sheetbase Backend</h1>' +
+                '<p>Home page: <a href="https://sheetbase.net" target="_blank">https://sheetbase.net</a>.</p>'
+              );
             break;              
         }
     }

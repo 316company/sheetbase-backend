@@ -28,28 +28,24 @@ var Model = (function (_Model) {
     _Model.create_ = function () {
         var _this = this;
         var CONFIG = Config.get();
-
-        var databases = [];
-        for(var key in CONFIG) {
-            if(key.toLowerCase().indexOf('database') > -1) databases.push(CONFIG[key]);
-        }
         
-        TamotsuX.initialize(SpreadsheetApp.openById(CONFIG.database));
-        for(var i = 0; i < databases.length; i++) {
-            var spreadsheetId = databases[i];
-            var spreadsheet = SpreadsheetApp.openById(spreadsheetId);
-            var sheets = spreadsheet.getSheets();
-            for(var j = 0; j < sheets.length; j++) {
-                var sheet = sheets[j];
-                var sheetName = sheet.getName();
-                var modelName = Pluralize.singular(sheetName);
-                    modelName = modelName.charAt(0).toUpperCase() + modelName.slice(1);
-                
-                _this.data_[modelName] = TamotsuX.Table.define({
-                    spreadsheet: spreadsheet,
-                    sheetName: sheetName,
-                });
-            }
+        // main database
+        var spreadsheet = SpreadsheetApp.openById(CONFIG.database);
+        TamotsuX.initialize(spreadsheet);
+        var sheets = spreadsheet.getSheets();
+        for(var i = 0; i < sheets.length; i++) {
+            var sheet = sheets[i];
+            var sheetName = sheet.getName();
+
+            var modelName = sheetName;
+            if(modelName.substr(0,1)==='_') modelName = modelName.substr(1, modelName.length);
+            modelName = Pluralize.singular(modelName);
+            modelName = modelName.charAt(0).toUpperCase() + modelName.slice(1);
+            
+            _this.data_[modelName] = TamotsuX.Table.define({
+                spreadsheet: spreadsheet,
+                sheetName: sheetName,
+            });
         }
 
         return _this.data_;

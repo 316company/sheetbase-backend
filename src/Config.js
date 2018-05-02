@@ -27,12 +27,16 @@ var Config = (function (_Config) {
     */
     _Config.set_ = function (data) {
         var _this = this;
-
         if(!data || !(data instanceof Object)) return; 
-
         for(var key in data) {
             _this.data_[key] = data[key];
         }
+
+        // auto generate options
+        if(!_this.data_.backend) {
+            _this.data_.backend = ScriptApp.getService().getUrl();
+        }
+
         return _this.data_;
     }
 

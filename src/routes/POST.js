@@ -49,26 +49,26 @@ var POSTRoute = (function (_POSTRoute) {
                 );
             break;
 
-            case '/auth/verifyCode':
+            case '/auth/verify-code':
                 return Response.json(
                     User.verifyOobCode(body.oobCode)
                 );
             break;
 
-            case '/auth/passwordReset':
+            case '/auth/password-reset':
                 return Response.json(
                     User.sendPasswordResetEmail(body.email)
                 );
             break;
 
-            case '/auth/setPassword':
+            case '/auth/set-password':
                 return Response.json(
                     User.doPasswordReset(body.oobCode, body.password)
                 );
             break;
             
             /**
-             * POST /file
+             * Upload a file
              * @param file: {
              *  name: string,
              *  mimeType: string,
