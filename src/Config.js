@@ -33,8 +33,8 @@ var Config = (function (_Config) {
         }
 
         // auto generate options
-        if(!_this.data_.backend) {
-            _this.data_.backend = ScriptApp.getService().getUrl();
+        if(!_this.data_.backendUrl) {
+            _this.data_.backendUrl = ScriptApp.getService().getUrl();
         }
 
         return _this.data_;

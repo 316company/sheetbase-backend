@@ -17,8 +17,6 @@ var Request = (function (_Request) {
     return params;
   }
 
-
-
   /**
     * 
     * @param {object} e - Event from doGet(), doPost()
@@ -31,8 +29,6 @@ var Request = (function (_Request) {
     if (key) return body[key];
     return body;
   }
-
-
 
   /**
    * Check authorization status

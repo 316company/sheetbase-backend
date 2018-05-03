@@ -8,7 +8,7 @@ var TemplateAuth = (function (_TemplateAuth) {
         var html = '';
 
         // more data
-        var link = (CONFIG.authUrl ? CONFIG.authUrl +'?': 'https://script.google.com/macros/s/'+ CONFIG.backend +'/exec?e=auth/action&');
+        var link = CONFIG.authUrl ? CONFIG.authUrl +'?': CONFIG.backendUrl +'?e=auth/action&';
             link += 'mode=passwordReset';
             link += '&apiKey='+ CONFIG.apiKey;
             link += '&oobCode='+ user._oobCode;

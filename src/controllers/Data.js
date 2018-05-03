@@ -8,26 +8,30 @@ var Data = (function (_Data) {
 
     _Data.get = function (tableName, customRange) {
         var _this = this;
-        if(!tableName)
-            return AppError.make(
-                'data/no-table-name',
-                'You must give the table name!'
-            );
         
-        if(tableName.substr(0,1)==='_')
-            return AppError.make(
-                'data/private-data',
-                'Can not get private data!'
-            );
-
+        if(!tableName) return AppError.client(
+            'data/no-table-name',
+            'You must give the table name!'
+        );
+        
+        if(tableName.substr(0,1)==='_') return AppError.client(
+            'data/private-data',
+            'Can not get private data!'
+        );
+        
+        var data = {};
         try {
-            var spreadsheet = SpreadsheetApp.openById(Config.get('database'));
+            var spreadsheet = SpreadsheetApp.openById(Config.get('databaseId'));
             var range = spreadsheet.getRange(tableName +'!'+ (customRange||'A1:ZZ'));
             var values = range.getValues();
-            return _this.transform(values);
+            data = _this.transform(values);
         } catch(error) {
-            return {};
+            return AppError.server(
+                'data/unknown',
+                'Errors getting data!'
+            );
         }
+        return data;
     }
 
     /**

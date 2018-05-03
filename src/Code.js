@@ -8,24 +8,14 @@
  * @return {boolean}
  * 
 */
-function initialize(SHEETBASE_CONFIG, APP_CONFIG) {
-    if(!SHEETBASE_CONFIG)
-        throw new Error('Missing config data.');
-    
-    if(!(SHEETBASE_CONFIG instanceof Object))
-        throw new Error('Invalid config data.');
+function initialize(CONFIG) {
+    if(!CONFIG || !(CONFIG instanceof Object))
+        throw new Error('Missing or invalid config data.');
 
-    if(!SHEETBASE_CONFIG.apiKey || !SHEETBASE_CONFIG.database || !SHEETBASE_CONFIG.backend)
-        throw new Error('Config data must contain \'apiKey\', \'database\' and \'backend\' field.');
+    if(!CONFIG.apiKey || !CONFIG.databaseId)
+        throw new Error('Config data must contain \'apiKey\' and \'databaseId\' field.');
 
-    var ALL_CONFIG = SHEETBASE_CONFIG; 
-    if(APP_CONFIG && (APP_CONFIG instanceof Object)) {
-        for(var key in APP_CONFIG) {
-            ALL_CONFIG[key] = APP_CONFIG[key];
-        }
-    }
-
-    var configData = Config.set_(ALL_CONFIG);
+    var configData = Config.set_(CONFIG);
     var modelData = Model.create_();
     return (configData&&modelData) ? true: false;
 }

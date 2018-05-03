@@ -13,31 +13,27 @@ var User = (function (_User) {
   _User.create = function (email, password) {
     var CONFIG = Config.get();      
 
-    if(!email || !password)
-      return AppError.make(
-        'auth/missing-credential',
-        'Missing email or password!'
-      );    
-    if(!(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i).test(email))
-      return AppError.make(
-        'auth/invalid-email',
-        'Invalid email format!'
-      );    
-    if((''+ password).length < 7)
-      return AppError.make(
-        'auth/invalid',
-        'Password must greater than 7 characters!'
-      );
+    if(!email || !password) return AppError.client(
+      'auth/missing-credential',
+      'Missing email or password!'
+    );
+    if(!(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i).test(email)) return AppError.client(
+      'auth/invalid-email',
+      'Invalid email format!'
+    );    
+    if((''+ password).length < 7) return AppError.client(
+      'auth/invalid',
+      'Password must greater than 7 characters!'
+    );
     
     var UserTable = Model.get('User');
     
     // check exists
     var user = UserTable.where({ email: email }).first();
-    if(user)
-      return AppError.make(
-        'auth/user-exists',
-        'User exists!'
-      );
+    if(user) return AppError.client(
+      'auth/user-exists',
+      'User exists!'
+    );
     
     var passwordHash = Jsrsasign.KJUR.crypto.Util.sha256(''+ password);
     var timestampISO = (new Date()).toISOString();
@@ -51,11 +47,10 @@ var User = (function (_User) {
     
     // append data
     var userCreated = UserTable.create(userData);
-    if(!userCreated)
-      return AppError.make(
-        'auth/action-fails',
-        'Can not create user, please try again!'
-      );
+    if(!userCreated) return AppError.server(
+      'auth/action-fails',
+      'Can not create user, please try again!'
+    );
     
     // remove private fields
     for(var key in userData) {
@@ -70,8 +65,6 @@ var User = (function (_User) {
     return { token: token, user: userData };
   }
   
-
-
   /**
    * Log user in
    * @param {string} email - User email
@@ -81,28 +74,25 @@ var User = (function (_User) {
   _User.login = function (email, password) {
     var CONFIG = Config.get();
 
-    if(!email || !password)
-      return AppError.make(
-        'auth/missing-credential',
-        'Missing email or password.'
-      );
+    if(!email || !password) return AppError.client(
+      'auth/missing-credential',
+      'Missing email or password.'
+    );
 
     var UserTable = Model.get('User');
     
     // check exists
     var user = UserTable.where({ email: email }).first();
-    if(!user)
-      return AppError.make(
-        'auth/user-not-exists',
-        'User doesn\'t exists!'
-      );
+    if(!user) return AppError.client(
+      'auth/user-not-exists',
+      'User doesn\'t exists!'
+    );
     
     var passwordHash = Jsrsasign.KJUR.crypto.Util.sha256(''+ password);
-    if(user._password !== passwordHash)
-      return AppError.make(
-        'auth/wrong-password',
-        'Wrong password!'
-      );
+    if(user._password !== passwordHash) return AppError.client(
+      'auth/wrong-password',
+      'Wrong password!'
+    );
     
     // update login
     user['lastLogin'] = (new Date()).toISOString();
@@ -142,20 +132,18 @@ var User = (function (_User) {
    * @return {AuthUser|AppError}
    */
   _User.profile = function (uid) {
-    if(!uid)
-      return AppError.make(
-        'auth/missing-info',
-        'Missing information!'
-      );
+    if(!uid) return AppError.client(
+      'auth/missing-info',
+      'Missing information!'
+    );
 
     var UserTable = Model.get('User');
     
     var user = UserTable.where({ uid: uid }).first();
-    if(!user)
-      return AppError.make(
-        'auth/user-not-exists',
-        'User doesn\'t exists!'
-      );
+    if(!user) return AppError.client(
+      'auth/user-not-exists',
+      'User doesn\'t exists!'
+    );
 
     var userData = user;
 
@@ -164,9 +152,7 @@ var User = (function (_User) {
       if(key.substr(0,1)==='_') delete userData[key];
     }
 
-    return {
-      user: Data.finalize(user)
-    }
+    return Data.finalize(user);
   }
 
   /**
@@ -176,25 +162,22 @@ var User = (function (_User) {
    * @return {AuthUser|AppError}
    */
   _User.updateProfile = function (uid, profileData) {
-    if(!uid || !profileData)
-      return AppError.make(
-        'auth/missing-info',
-        'Missing information!'
-      );
-    if(!(profileData instanceof Object))
-      return AppError.make(
-        'auth/invalid-data',
-        'Profile data must be an object!'
-      );
+    if(!uid || !profileData) return AppError.client(
+      'auth/missing-info',
+      'Missing information!'
+    );
+    if(!(profileData instanceof Object)) return AppError.client(
+      'auth/invalid-data',
+      'Profile data must be an object!'
+    );
 
     var UserTable = Model.get('User');
     
     var user = UserTable.where({ uid: uid }).first();
-    if(!user)
-      return AppError.make(
-        'auth/user-not-exists',
-        'User doesn\'t exists!'
-      );
+    if(!user) return AppError.client(
+      'auth/user-not-exists',
+      'User doesn\'t exists!'
+    );
 
     // remove dedicated fields
     delete profileData['#'];
@@ -204,6 +187,7 @@ var User = (function (_User) {
     delete profileData._password;
     delete profileData.lastLogin;
     delete profileData._oobCode;
+    delete profileData._oobTimestamp;
     delete profileData.providerData;
 
     // save data
@@ -216,11 +200,10 @@ var User = (function (_User) {
     }
 
     var userSaved = user.save();
-    if(!userSaved)
-      return AppError.make(
-        'auth/action-fails',
-        'Can not create user, please try again!'
-      );
+    if(!userSaved) return AppError.server(
+      'auth/action-fails',
+      'Can not create user, please try again!'
+    );
 
     var userData = user;
 
@@ -229,9 +212,7 @@ var User = (function (_User) {
       if(key.substr(0,1)==='_') delete userData[key];
     }
 
-    return {
-      user: Data.finalize(user)
-    }
+    return Data.finalize(user);
   }
 
   /**
@@ -240,25 +221,33 @@ var User = (function (_User) {
    * @return {Success}
    */
   _User.verifyOobCode = function (oobCode) {
-    if(!oobCode)
-      return AppError.make(
-        'auth/missing-info',
-        'Missing information!'
-      );
+    if(!oobCode) return AppError.client(
+      'auth/missing-info',
+      'Missing information!'
+    );
 
     var UserTable = Model.get('User');
     
     var user = UserTable.where({ _oobCode: oobCode }).first();
-    if(!user)
-      return AppError.make(
-        'auth/user-not-exists',
-        'User doesn\'t exists!'
-      );
+    if(!user) return AppError.client(
+      'auth/user-not-exists',
+      'User doesn\'t exists!'
+    );
+
+    var codeExpired = true;
+    if(user._oobTimestamp) {
+      var timeThen = new Date(user._oobTimestamp);
+      var timeNow = new Date();
+      codeExpired = Math.floor((timeNow-timeThen)/86400000) > 0; // > 24 hours
+    }
+    if(codeExpired) return AppError.client(
+      'auth/code-expired',
+      'Code has been expired!'
+    );
 
     return {
-      uid: uid,
-      success: true
-    }
+      code: oobCode
+    };
   }
 
   /**
@@ -267,22 +256,21 @@ var User = (function (_User) {
    * @return {Success}
    */
   _User.sendPasswordResetEmail = function (email) {
-    if(!email)
-      return AppError.make(
-        'auth/missing-info',
-        'Missing information!'
-      );
+    if(!email) return AppError.client(
+      'auth/missing-info',
+      'Missing information!'
+    );
 
     var UserTable = Model.get('User');
     
     var user = UserTable.where({ email: email }).first();
-    if(!user)
-      return AppError.make(
-        'auth/user-not-exists',
-        'User doesn\'t exists!'
-      );
+    if(!user) return AppError.client(
+      'auth/user-not-exists',
+      'User doesn\'t exists!'
+    );
     
     user['_oobCode'] = Utilities.getUuid();
+    user['_oobTimestamp'] = (new Date()).toISOString();
     user.save();
 
     // send email
@@ -300,15 +288,14 @@ var User = (function (_User) {
     try {
       GmailApp.sendEmail(recipient, title, bodyText, options);
     } catch(error) {
-      return AppError.make(
-        'mail/not-sent',
+      return AppError.server(
+        'auth/email-not-sent',
         'Email not sent!'
       );
     }
 
     return {
-      email: email,
-      success: true
+      email: email
     };
   }
 
@@ -319,40 +306,49 @@ var User = (function (_User) {
    * @return {Success}
    */
   _User.doPasswordReset = function (oobCode, newPassword) {
-    if(!oobCode || !newPassword)
-      return AppError.make(
-        'auth/missing-info',
-        'Missing information!'
-      );
+    if(!oobCode || !newPassword) return AppError.client(
+      'auth/missing-info',
+      'Missing information!'
+    );
 
-    if((''+ newPassword).length < 7)
-      return AppError.make(
-        'auth/invalid',
-        'Password must greater than 7 characters!'
-      );
+    if((''+ newPassword).length < 7) return AppError.client(
+      'auth/invalid',
+      'Password must greater than 7 characters!'
+    );
     
     var UserTable = Model.get('User');
     
     var user = UserTable.where({ _oobCode: oobCode }).first();
-    if(!user)
-      return AppError.make(
-        'auth/user-not-exists',
-        'User doesn\'t exists!'
-      );
+    if(!user) return AppError.client(
+      'auth/user-not-exists',
+      'User doesn\'t exists!'
+    );
+
+    var codeExpired = true;
+    if(user._oobTimestamp) {
+      var timeThen = new Date(user._oobTimestamp);
+      var timeNow = new Date();
+      codeExpired = Math.floor((timeNow-timeThen)/86400000) > 0; // > 24 hours
+    }
+    if(codeExpired) return AppError.client(
+      'auth/code-expired',
+      'Code has been expired!'
+    );
     
-    user['_oobCode'] = '';
+      // update password
     user['_password'] = Jsrsasign.KJUR.crypto.Util.sha256(''+ newPassword);
+    if(!user.save()) return AppError.server(
+      'auth/action-fails',
+      'Can not update user password, please try again!'
+    );
     
-    var userSaved = user.save();
-    if(!userSaved)
-      return AppError.make(
-        'auth/action-fails',
-        'Can not update user, please try again!'
-      );
+    // reset oob data
+    user['_oobCode'] = '';
+    user['_oobTimestamp'] = '';
+    user.save();
 
     return {
-      uid: uid,
-      success: true
+      code: oobCode
     };
   }
 

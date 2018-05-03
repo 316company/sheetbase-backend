@@ -5,23 +5,24 @@
 var AppFile = (function (_AppFile) {
 
     _AppFile.get = function (fileId) {
-        if(!fileId)
-            return AppError.make(
-                'file/missing-info',
-                'No file \'id\' found in request.'
-            );
+        if(!fileId) return AppError.client(
+            'file/missing-info',
+            'No file \'id\' found in request.'
+        );
 
         var contentFolderId = Config.get('contentFolder');
-        if(!contentFolderId)
-            return AppError.make(
-                'file/no-folder',
-                'No support for file uploading!'
-            );
+        if(!contentFolderId) return AppError.server(
+            'file/not-support',
+            'No support for file uploading!'
+        );
         
         try {
             DriveApp.getFolderById(contentFolderId);
         } catch(error) {
-            throw new Error('No content folder found!');
+            return AppError.server(
+                'file/not-support',
+                'No support for file uploading!'
+            );
         }
 
         try {
@@ -37,17 +38,6 @@ var AppFile = (function (_AppFile) {
                 link: file.getUrl()
             };
 
-            // var file = Drive.Files.get(fileId);
-            // return {
-            //     id: file.id,
-            //     url: file.webContentLink,
-            //     name: file.title,
-            //     mimeType: file.mimeType,
-            //     description: file.description,
-            //     size: file.fileSize,
-            //     link: file.webViewLink,
-            //     thumbnail: file.thumbnailLink
-            // }
         } catch(error) {
             return {
                 id: fileId
@@ -63,35 +53,34 @@ var AppFile = (function (_AppFile) {
     _AppFile.set = function (file, customFolderName) {
         var _this = this;
 
-        if(!file)
-            return AppError.make(
-                'file/missing-info',
-                'No file \'file.content\' found in request.'
-            );
+        if(!file) return AppError.client(
+            'file/missing-info',
+            'No file \'file.content\' found in request.'
+        );
 
-        if(
-            !(file instanceof Object) ||
+        if(!(file instanceof Object) ||
             !file.name ||
             !file.mimeType ||
             !file.base64String
-        )
-            return AppError.make(
-                'file/invalid',
-                'File data must contains name, mimeType and base64String.'
-            );
+        ) return AppError.client(
+            'file/invalid',
+            'File data must contains name, mimeType and base64String.'
+        );
 
         var contentFolderId = Config.get('contentFolder');
-        if(!contentFolderId)
-            return AppError.make(
-                'file/no-folder',
-                'No support for file uploading!'
-            );
+        if(!contentFolderId) return AppError.server(
+            'file/no-folder',
+            'No support for file uploading!'
+        );
 
         var folder;
         try {
             folder = DriveApp.getFolderById(contentFolderId);
         } catch(error) {
-            throw new Error('No content folder found!');
+            return AppError.server(
+                'file/no-folder',
+                'No support for file uploading!'
+            );
         }
         
         // get uploads folder
@@ -124,21 +113,8 @@ var AppFile = (function (_AppFile) {
                 size: file.getSize(),
                 link: file.getUrl()
             };
-            
-            // file = Drive.Files.get(file.getId());
-            // return {
-            //     id: file.id,
-            //     url: file.webContentLink,
-            //     name: file.title,
-            //     mimeType: file.mimeType,
-            //     description: file.description,
-            //     size: file.fileSize,
-            //     link: file.webViewLink,
-            //     thumbnail: file.thumbnailLink
-            // }
         } catch(error) {
-            // throw new Error(error);
-            return AppError.make(
+            return AppError.server(
                 'file/not-saved',
                 'Errors, file not saved, please try again later.'
             );

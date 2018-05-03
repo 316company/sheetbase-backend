@@ -30,7 +30,7 @@ var Model = (function (_Model) {
         var CONFIG = Config.get();
         
         // main database
-        var spreadsheet = SpreadsheetApp.openById(CONFIG.database);
+        var spreadsheet = SpreadsheetApp.openById(CONFIG.databaseId);
         TamotsuX.initialize(spreadsheet);
         var sheets = spreadsheet.getSheets();
         for(var i = 0; i < sheets.length; i++) {

@@ -4,13 +4,28 @@
  */
 var AppError = (function (_AppError) {
 
-    _AppError.make = function (code, message) {
-        var err = {
-            error: true
+    _AppError.client = function (code, message, data) {
+        var _this = this;
+        return _this.error(code, message, 400, data);
+    }
+
+    _AppError.server = function (code, message, data) {
+        var _this = this;
+        return _this.error(code, message, 500, data);
+    }
+
+    _AppError.error = function (code, message, httpCode, data) {
+        var errorData = {
+            error: true,
+            status: httpCode || 400,
+            meta: {
+                timestamp: (new Date()).toISOString()
+            }
         };
-        if(code) err.code = code;
-        if(message) err.message = message;
-        return err;
+        errorData.meta.code = code || 'app/unknown';
+        errorData.meta.message = message || 'Something wrong!';
+        if(data) errorData.data = data;
+        return errorData;
     }
 
     return _AppError;

@@ -26,29 +26,30 @@ var Response = (function (_Response) {
         return HtmlService.createHtmlOutput(html);
     }
 
-    /**
-     * return home message
-     */
-    _Response.home = function () {
-        var _this = this;
-        return _this.json({
-            "name": "Sheetbase Backend",
-            "homepage": "https://sheetbase.net",
-            "docs": "https://sheetbase.net/docs"
-        });
-    }
 
     /**
-     * Return unauthorization message
-     * @return {UnauthorizedMessage}
+     * Standard response success
+     * @param {data} object - Body of the response
+     * @param {meta} object - Headers of the response
+     * @return {StandardResponse}
      */
-    _Response.unauthorized = function () {
+    _Response.standard = function (data, meta) {
         var _this = this;
-        return _this.json({
-            error: true,
-            code: 'http/403',
-            message: 'Unauthorized!'
-        });
+        var responseData = data;
+        if(!responseData) responseData = AppError.server();
+        if(!(responseData instanceof Object)) responseData = {value: responseData};
+        if(!responseData.error) {
+            responseData = {
+                success: true,
+                status: 200,
+                data: responseData
+            };
+            meta = meta || {};
+            if(!(meta instanceof Object)) meta = {value: meta};
+            meta.timestamp = (new Date()).toISOString();
+            responseData.meta = meta;
+        }
+        return _this.json(responseData);
     }
 
     return _Response;
