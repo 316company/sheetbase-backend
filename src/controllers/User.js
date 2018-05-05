@@ -230,8 +230,8 @@ var User = (function (_User) {
     
     var user = UserTable.where({ _oobCode: oobCode }).first();
     if(!user) return AppError.client(
-      'auth/user-not-exists',
-      'User doesn\'t exists!'
+      'auth/code-invalid',
+      'Invalid code!'
     );
 
     var codeExpired = true;
@@ -320,8 +320,8 @@ var User = (function (_User) {
     
     var user = UserTable.where({ _oobCode: oobCode }).first();
     if(!user) return AppError.client(
-      'auth/user-not-exists',
-      'User doesn\'t exists!'
+      'auth/code-invalid',
+      'Invalid code!'
     );
 
     var codeExpired = true;

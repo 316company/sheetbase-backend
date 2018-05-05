@@ -51,7 +51,7 @@ var AppFile = (function (_AppFile) {
      * @param {Object} file - File data
      * @param {string} customFolderName - Custom sub folder
      */
-    _AppFile.set = function (file, customFolderName) {
+    _AppFile.set = function (file, customFolderName, customName) {
         var _this = this;
 
         if(!file) return AppError.client(
@@ -99,10 +99,19 @@ var AppFile = (function (_AppFile) {
             folder = _this.getFolderByName_(folder, year);
             folder = _this.getFolderByName_(folder, month);
         }
+
+        var fileName = file.name;
+        if(customName) fileName = customName;
+        if(fileName === 'MD5') {
+            fileName = Jsrsasign.KJUR.crypto.Util.md5(file.name);
+        }
+        if(fileName === 'AUTO') {
+            fileName = Utilities.getUuid();
+        }
         
         try {
             var file = folder.createFile(
-                Utilities.newBlob(Utilities.base64Decode(file.base64String), file.mimeType, file.name)
+                Utilities.newBlob(Utilities.base64Decode(file.base64String), file.mimeType, fileName)
             ).setSharing(DriveApp.Access.ANYONE, DriveApp.Permission.VIEW);
             var id = file.getId();
             return {
