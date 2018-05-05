@@ -1,17 +1,17 @@
-Router.get('/user/profile', function (params, body) {
-    var uid = User.verify(params.token);
-    if(!uid) return Response.json(AppError.client(
+Router.get('/user/profile', Request.authorize, function (req, res) {
+    var uid = User.verify(req.params.token);
+    if(!uid) return res.json(AppError.client(
         'auth/invalid-token',
         'Invalid token!'  
     ));
-    return Response.standard(
+    return res.standard(
         User.profile(uid)
     );
 });
 
-Router.post('/user/create', function (params, body) {
-    var credential = body.credential || {};
-    return Response.standard(
+Router.post('/user/create', Request.authorize, function (req, res) {
+    var credential = req.body.credential || {};
+    return res.standard(
         User.create(
             credential.email,
             credential.password
@@ -19,9 +19,9 @@ Router.post('/user/create', function (params, body) {
     );
 });
 
-Router.post('/user/login', function (params, body) {
-    var credential = body.credential || {};
-    return Response.standard(
+Router.post('/user/login', Request.authorize, function (req, res) {
+    var credential = req.body.credential || {};
+    return res.standard(
         User.login(
             credential.email,
             credential.password
@@ -29,13 +29,13 @@ Router.post('/user/login', function (params, body) {
     );
 });
 
-Router.post('/user/profile', function (params, body) {
-    var uid = User.verify(body.token);
-    if(!uid) return Response.json(AppError.client(
+Router.post('/user/profile', Request.authorize, function (req, res) {
+    var uid = User.verify(req.body.token);
+    if(!uid) return res.json(AppError.client(
         'auth/invalid-token',
         'Invalid token!'  
     ));
-    return Response.standard(
-        User.updateProfile(uid, body.profileData)
+    return res.standard(
+        User.updateProfile(uid, req.body.profile)
     );
 });

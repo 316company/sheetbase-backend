@@ -1,11 +1,11 @@
-Router.get('/file', function (params, body) {
-    return Response.standard(
-        AppFile.get(params.id)
+Router.get('/file', Request.authorize, function (req, res) {
+    return res.standard(
+        AppFile.get(req.params.id)
     );
 });
 
-Router.post('/file', function (params, body) {
-    return Response.standard(
-        AppFile.set(body.file, body.folder)
+Router.post('/file', Request.authorize, function (req, res) {
+    return res.standard(
+        AppFile.set(req.body.file, req.body.folder)
     );
 });

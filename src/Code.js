@@ -17,5 +17,5 @@ function initialize(CONFIG) {
 
     var configData = Config.set_(CONFIG);
     var modelData = Model.create_();
-    return (configData&&modelData) ? true: false;
+    return Router;
 }

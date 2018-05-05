@@ -12,7 +12,7 @@ var Request = (function (_Request) {
   */
   _Request.param = function (e, key) {
     if(!e) return;
-    var params = e.parameter;
+    var params = e.parameter||{};
     if (key) return params[key];
     return params;
   }
@@ -28,6 +28,17 @@ var Request = (function (_Request) {
     var body = JSON.parse(e.postData ? e.postData.contents : '{}');
     if (key) return body[key];
     return body;
+  }
+
+  /**
+   * Authorization middleware
+   */
+  _Request.authorize = function (req, res, next) {
+    var apiKey = req.body.apiKey || req.params.apiKey;
+    if(Config.get('apiKey') !== apiKey) {
+      return res.json(AppError.error('http/403', 'Unauthorized!', 403));
+    }
+    return next();
   }
 
   /**

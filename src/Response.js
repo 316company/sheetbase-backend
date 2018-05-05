@@ -5,15 +5,13 @@
 var Response = (function (_Response) {
 
     /**
-     * Response JSON
-     * @param {object} object - JSON data
-     * @return {ContentServiceJSONData}
+     * Response content
+     * @param {string} content - String content
      */
-    _Response.json = function (object) {
-        var JSONString = JSON.stringify(object);
-        var JSONOutput = ContentService.createTextOutput(JSONString);
-        JSONOutput.setMimeType(ContentService.MimeType.JSON);
-        return JSONOutput;
+    _Response.send = function (content) {
+        var _this = this;
+        if(content instanceof Object) return _this.json(content); 
+        return _this.html(content);
     }
 
 
@@ -28,7 +26,20 @@ var Response = (function (_Response) {
 
 
     /**
-     * Standard response success
+     * Response JSON
+     * @param {object} object - JSON data
+     * @return {ContentServiceJSONData}
+     */
+    _Response.json = function (object) {
+        var JSONString = JSON.stringify(object);
+        var JSONOutput = ContentService.createTextOutput(JSONString);
+        JSONOutput.setMimeType(ContentService.MimeType.JSON);
+        return JSONOutput;
+    }
+
+
+    /**
+     * Standard JSON response
      * @param {data} object - Body of the response
      * @param {meta} object - Headers of the response
      * @return {StandardResponse}

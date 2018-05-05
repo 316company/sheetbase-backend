@@ -1,5 +1,5 @@
-Router.get('/data', function (params, body) {
-    return Response.standard(
-        Data.get(params.table, params.range)
+Router.get('/data', Request.authorize, function (req, res) {
+    return res.standard(
+        Data.get(req.params.table, req.params.range)
     );
 });

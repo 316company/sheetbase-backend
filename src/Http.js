@@ -1,37 +1,48 @@
 var HTTP = (function (_HTTP) {
 
-    _HTTP.get = function (e, authCheck) {
-        var params = Request.param(e)||{};
-        var body = Request.body(e);
-        var endpoint = params.e||'';
+    _HTTP.get = function (e) {
+        var _this = this;
+        
+        var endpoint = (e.parameter||{}).e||'';
         if(endpoint.substr(0,1)!=='/') endpoint = '/'+ endpoint;
 
-        if(authCheck && !Request.isAuthorized(e)) {
-            return Response.json(AppError.error('http/403', 'Unauthorized!', 403));
-        }
+        var req = {
+            params: e.parameter||{},
+            body: JSON.parse(e.postData ? e.postData.contents : '{}')
+        };
+        var res = Response;
 
-        var routeHandler = Router.get_(endpoint);
-        if(!routeHandler) routeHandler = function(p, b) {
-            return Response.html('<h1>Not found!</h1>');
-        }
-        return routeHandler(params, body);
+        var handlers = Router.get_(endpoint);
+        return _this.run_(handlers, req, res);
     }
 
-    _HTTP.post = function (e, authCheck) {
-        var params = Request.param(e)||{};
-        var body = Request.body(e);
-        var endpoint = params.e||'';
+    _HTTP.post = function (e) {
+        var _this = this;
+        
+        var endpoint = (e.parameter||{}).e||'';
         if(endpoint.substr(0,1)!=='/') endpoint = '/'+ endpoint;
 
-        if(authCheck && !Request.isAuthorized(e)) {
-            return Response.json(AppError.error('http/403', 'Unauthorized!', 403));
-        }
+        var req = {
+            params: e.parameter||{},
+            body: JSON.parse(e.postData ? e.postData.contents : '{}')
+        };
+        var res = Response;
 
-        var routeHandler = Router.post_(endpoint);
-        if(!routeHandler) routeHandler = function(p, b) {
-            return Response.json(AppError.error('http/404', 'Not found!', 404));
+        var handlers = Router.post_(endpoint);
+        return _this.run_(handlers, req, res);
+    }
+
+    _HTTP.run_ = function (handlers, req, res) {
+        var _this = this;
+        var handler = handlers.shift();
+        if(handlers.length < 1) {
+            return handler(req, res);
+        } else {
+            var next = function() {
+                return _this.run_(handlers, req, res);
+            }
+            return handler(req, res, next);
         }
-        return routeHandler(params, body);
     }
 
     return _HTTP;

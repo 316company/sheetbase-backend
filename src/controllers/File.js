@@ -39,9 +39,10 @@ var AppFile = (function (_AppFile) {
             };
 
         } catch(error) {
-            return {
-                id: fileId
-            }
+            return AppError.client(
+                'file/unknown',
+                'Errors happen, please try again!'
+            );
         }
     }
 
