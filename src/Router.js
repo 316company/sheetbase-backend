@@ -25,6 +25,21 @@ var Router = (function (_Router) {
 
     }
 
+    _Router.all = function () {
+        var _this = this;
+        var args = Array.prototype.slice.call(arguments, 0);
+
+        // TODO: validata route name and handler
+
+        var routeName = args.shift();
+        var handler = args.pop();
+
+        _this.routes_['GET:'+ routeName] = handler;
+        _this.routeMiddlewares_['GET:'+ routeName] = args;
+        _this.routes_['POST:'+ routeName] = handler;
+        _this.routeMiddlewares_['POST:'+ routeName] = args;
+    }
+
     _Router.get = function () {
         var _this = this;
         var args = Array.prototype.slice.call(arguments, 0);

@@ -34,7 +34,7 @@ var Helper = (function (_Helper) {
     var object = {};
     for(var i = 0; i < (array||[]).length; i++) {
       var item = array[i];
-      object[item['key'] || item['slug'] || ('' + item['id']) || ('' + item['#']) || ('' + Math.random() * 1E20)] = item;
+      object[item['key'] || item['slug'] || (item['id'] ? ''+ item['id']: null) || (item['#'] ? ''+ item['#']: null) || (''+ Math.random() * 1E20)] = item;
     }
     return object;
   }

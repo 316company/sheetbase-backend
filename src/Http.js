@@ -8,7 +8,8 @@ var HTTP = (function (_HTTP) {
 
         var req = {
             params: e.parameter||{},
-            body: JSON.parse(e.postData ? e.postData.contents : '{}')
+            body: JSON.parse(e.postData ? e.postData.contents : '{}'),
+            data: {}
         };
         var res = Response;
 
@@ -24,7 +25,8 @@ var HTTP = (function (_HTTP) {
 
         var req = {
             params: e.parameter||{},
-            body: JSON.parse(e.postData ? e.postData.contents : '{}')
+            body: JSON.parse(e.postData ? e.postData.contents : '{}'),
+            data: {}
         };
         var res = Response;
 
@@ -38,7 +40,11 @@ var HTTP = (function (_HTTP) {
         if(handlers.length < 1) {
             return handler(req, res);
         } else {
-            var next = function() {
+            var next = function(data) {
+                if(data) {
+                    if(!(data instanceof Object)) data = {value: data};
+                    req.data = Object.assign({}, req.data||{}, data||{});
+                }
                 return _this.run_(handlers, req, res);
             }
             return handler(req, res, next);

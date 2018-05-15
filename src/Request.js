@@ -30,29 +30,6 @@ var Request = (function (_Request) {
     return body;
   }
 
-  /**
-   * Authorization middleware
-   */
-  _Request.authorize = function (req, res, next) {
-    var apiKey = req.body.apiKey || req.params.apiKey;
-    if(Config.get('apiKey') !== apiKey) {
-      return res.json(AppError.error('http/403', 'Unauthorized!', 403));
-    }
-    return next();
-  }
-
-  /**
-   * Check authorization status
-   * @param {object} e - Event from doGet(), doPost()
-   * @return {boolean}
-   */
-  _Request.isAuthorized = function (e) {
-    var _this = this;
-    if(!e) return;
-    var apiKey = _this.body(e, 'apiKey') || _this.param(e, 'apiKey');
-    return Config.get('apiKey') === apiKey;
-  }
-
   return _Request;
 
 })(Request||{});

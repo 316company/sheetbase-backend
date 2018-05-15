@@ -29,13 +29,8 @@ Router.post('/user/login', Request.authorize, function (req, res) {
     );
 });
 
-Router.post('/user/profile', Request.authorize, function (req, res) {
-    var uid = User.verify(req.body.token);
-    if(!uid) return res.json(AppError.client(
-        'auth/invalid-token',
-        'Invalid token!'  
-    ));
+Router.post('/user/profile', Request.authorize, Request.confirmUser, function (req, res) {
     return res.standard(
-        User.updateProfile(uid, req.body.profile)
+        User.updateProfile(req.data.uid, req.body.profile)
     );
 });

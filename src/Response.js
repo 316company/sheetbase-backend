@@ -20,8 +20,12 @@ var Response = (function (_Response) {
      * @param {string} html - HTML text
      * @return {HtmlServiceHTMLData}
      */
-    _Response.html = function (html) {
-        return HtmlService.createHtmlOutput(html);
+    _Response.html = function (html, isFile) {
+        if(isFile) {
+            return HtmlService.createHtmlOutputFromFile(html);
+        } else {
+            return HtmlService.createHtmlOutput(html);
+        }
     }
 
 
