@@ -42,21 +42,21 @@ app.post('/private', function (req, res, next) {
     return res.standard({hooray: 'You have passed the security check!'});
 });
 // same as above
-app.post('/private', Request.authorize, function (req, res) {
+app.post('/private', Sheetbase.Request.authorize, function (req, res) {
     return res.standard({hooray: 'You have passed the security check!'});
 });
 
 // middleware data
 app.post('/user', function (req, res, next) {
-    var uid = User.verify(req.body.token || req.params.token);
-    if(!uid) return res.json(AppError.client('auth/invalid-token', 'Invalid token!')); // exit
+    var uid = Sheetbase.User.verify(req.body.token || req.params.token);
+    if(!uid) return res.json(Sheetbase.AppError.client('auth/invalid-token', 'Invalid token!')); // exit
     return next({ uid: uid }); // continue, pass data to next handler
 }, function (req, res) {
     var uid = req.data.uid; // get data from upper handler
     return res.standard({hooray: 'You have passed the security check!', uid: uid});
 });
 // same as above
-app.post('/user', Request.confirmUser, function (req, res) {
+app.post('/user', Sheetbase.Request.confirmUser, function (req, res) {
     var uid = req.data.uid;  // get data from upper handler
     return res.standard({hooray: 'You have passed the security check!', uid: uid});
 });
