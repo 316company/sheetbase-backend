@@ -67,6 +67,8 @@ app.post('/user', Sheetbase.Request.confirmUser, function (req, res) {
 
 ## Config
 
+Configuration is optional. These options for using built-in Sheetbase functions.
+
 | Key           | Type   | Description                         |
 |---------------|--------|-------------------------------------|
 | apiKey        | string | Backend API key                     |
