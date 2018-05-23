@@ -28,6 +28,8 @@ var Model = (function (_Model) {
     _Model.create_ = function () {
         var _this = this;
         var CONFIG = Config.get();
+
+        if(!CONFIG.databaseId) return;
         
         // main database
         var spreadsheet = SpreadsheetApp.openById(CONFIG.databaseId);

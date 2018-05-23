@@ -4,16 +4,12 @@
  * 
  * @constructor
  * @param {object} config - Configuration data
- * @param {object} model - Model define
- * @return {boolean}
+ * @return {Router}
  * 
 */
 function initialize(CONFIG) {
-    if(!CONFIG || !(CONFIG instanceof Object))
-        throw new Error('Missing or invalid config data.');
-
-    if(!CONFIG.apiKey || !CONFIG.databaseId)
-        throw new Error('Config data must contain \'apiKey\' and \'databaseId\' field.');
+    if(CONFIG && !(CONFIG instanceof Object))
+        throw new Error('Invalid config data, must be NULL or an object.');
 
     var configData = Config.set_(CONFIG);
     var modelData = Model.create_();
