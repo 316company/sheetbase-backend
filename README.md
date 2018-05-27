@@ -18,15 +18,7 @@ function doGet(e) { return Sheetbase.HTTP.get(e) }
 function doPost(e) { return Sheetbase.HTTP.post(e) }
 
 // Step 2: initialize the library
-var app = Sheetbase.initialize({
-    "apiKey": "<api_key>",
-    "databaseId": "<database_id>",
-    "encryptionKey": "<encryption_key>",
-    "contentFolder": "<content_folder_id>",
-
-    // other configs
-    "authUrl": "https://domain.me/auth/action"
-});
+var app = Sheetbase.initialize();
 
 // Step 3: register routes
 app.get('/', function (req, res) {
