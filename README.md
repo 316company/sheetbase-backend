@@ -36,7 +36,7 @@ app.post('/private', function (req, res, next) {
     return res.standard({hooray: 'You have passed the security check!'});
 });
 // same as above
-app.post('/private', Sheetbase.Request.authorize, function (req, res) {
+app.post('/private', Sheetbase.Middleware.authorize, function (req, res) {
     return res.standard({hooray: 'You have passed the security check!'});
 });
 
@@ -50,7 +50,7 @@ app.post('/user', function (req, res, next) {
     return res.standard({hooray: 'You have passed the security check!', uid: uid});
 });
 // same as above
-app.post('/user', Sheetbase.Request.confirmUser, function (req, res) {
+app.post('/user', Sheetbase.Middleware.confirmUser, function (req, res) {
     var uid = req.data.uid;  // get data from upper handler
     return res.standard({hooray: 'You have passed the security check!', uid: uid});
 });
