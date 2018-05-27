@@ -8,6 +8,8 @@ Library ID: ``1ZUoDbpEwu4DC3i5tHsNMm3ng7smMWSsH4GzUvwCttlCHplOP2ly7Kzgw``
 
 Select latest version, set Identifier to ``Sheetbase``.
 
+See how to add a library to Google Apps Script projects: https://developers.google.com/apps-script/guides/libraries
+
 ## Usage
 
 ```javascript
