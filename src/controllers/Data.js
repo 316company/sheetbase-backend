@@ -34,6 +34,25 @@ var Data = (function (_Data) {
         return data;
     }
 
+    _Data.update = function (tableName, data) {
+        var _this = this;
+        
+        if(!tableName || !data) return AppError.client(
+            'data/missing-info',
+            'No \'table\' or \'data\'!'
+        );
+
+        // var tempDatabase = {};
+
+
+
+        // var Table = Model.get(tableName);
+
+        
+        
+        return data;
+    }
+
     /**
      * Turn [][] -> [{},{}, ...]
      * @param {Array} values - Data[][]

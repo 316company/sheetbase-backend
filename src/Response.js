@@ -20,12 +20,43 @@ var Response = (function (_Response) {
      * @param {string} html - HTML text
      * @return {HtmlServiceHTMLData}
      */
-    _Response.html = function (html, isFile) {
-        if(isFile) {
-            return HtmlService.createHtmlOutputFromFile(html);
-        } else {
-            return HtmlService.createHtmlOutput(html);
+    _Response.html = function (html) {
+        return HtmlService.createHtmlOutput(html);
+    }
+
+
+    /**
+     * Response HTML with templating
+     * @param {string} templateContent - HTML template
+     * @param {object} data - HTML template
+     * @return {HtmlServiceHTMLData}
+     */
+    _Response.render = function (template, data, viewEngine) {
+        viewEngine = viewEngine || Config.get('view engine') || 'native';
+        var htmlOutput;
+        
+        switch(viewEngine) {
+            case 'handlebars':
+                var templateText = template.getRawContent();
+                var handlebars = Handlebars.Handlebars.compile(templateText);
+                var html = handlebars(data);
+                htmlOutput = HtmlService.createHtmlOutput(html);
+            break;
+
+            case 'ejs':
+                var templateText = template.getRawContent();
+                var html = Ejs.ejs.render(templateText, data);
+                htmlOutput = HtmlService.createHtmlOutput(html);
+            break;
+
+            case 'native':
+            default:
+                template = Object.assign(template, data);
+                htmlOutput = template.evaluate();
+            break;
         }
+
+        return htmlOutput;
     }
 
 

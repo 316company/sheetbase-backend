@@ -26,7 +26,7 @@ var User = (function (_User) {
       'Password must greater than 7 characters!'
     );
     
-    var UserTable = Model.get('User');
+    var UserTable = Model.get('_users');
     
     // check exists
     var user = UserTable.where({ email: email }).first();
@@ -79,7 +79,7 @@ var User = (function (_User) {
       'Missing email or password.'
     );
 
-    var UserTable = Model.get('User');
+    var UserTable = Model.get('_users');
     
     // check exists
     var user = UserTable.where({ email: email }).first();
@@ -137,7 +137,7 @@ var User = (function (_User) {
       'Missing information!'
     );
 
-    var UserTable = Model.get('User');
+    var UserTable = Model.get('_users');
     
     var user = UserTable.where({ uid: uid }).first();
     if(!user) return AppError.client(
@@ -171,7 +171,7 @@ var User = (function (_User) {
       'Profile data must be an object!'
     );
 
-    var UserTable = Model.get('User');
+    var UserTable = Model.get('_users');
     
     var user = UserTable.where({ uid: uid }).first();
     if(!user) return AppError.client(
@@ -226,7 +226,7 @@ var User = (function (_User) {
       'Missing information!'
     );
 
-    var UserTable = Model.get('User');
+    var UserTable = Model.get('_users');
     
     var user = UserTable.where({ _oobCode: oobCode }).first();
     if(!user) return AppError.client(
@@ -261,7 +261,7 @@ var User = (function (_User) {
       'Missing information!'
     );
 
-    var UserTable = Model.get('User');
+    var UserTable = Model.get('_users');
     
     var user = UserTable.where({ email: email }).first();
     if(!user) return AppError.client(
@@ -316,7 +316,7 @@ var User = (function (_User) {
       'Password must greater than 7 characters!'
     );
     
-    var UserTable = Model.get('User');
+    var UserTable = Model.get('_users');
     
     var user = UserTable.where({ _oobCode: oobCode }).first();
     if(!user) return AppError.client(

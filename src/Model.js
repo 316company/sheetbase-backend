@@ -39,12 +39,12 @@ var Model = (function (_Model) {
             var sheet = sheets[i];
             var sheetName = sheet.getName();
 
-            var modelName = sheetName;
-            if(modelName.substr(0,1)==='_') modelName = modelName.substr(1, modelName.length);
-            modelName = Pluralize.singular(modelName);
-            modelName = modelName.charAt(0).toUpperCase() + modelName.slice(1);
+            // var modelName = sheetName;
+            // if(modelName.substr(0,1)==='_') modelName = modelName.substr(1, modelName.length);
+            // modelName = Pluralize.singular(modelName);
+            // modelName = modelName.charAt(0).toUpperCase() + modelName.slice(1);
             
-            _this.data_[modelName] = TamotsuX.Table.define({
+            _this.data_[sheetName] = TamotsuX.Table.define({
                 spreadsheet: spreadsheet,
                 sheetName: sheetName,
             });

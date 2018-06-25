@@ -18,11 +18,11 @@ function doGet(e) { return Sheetbase.HTTP.get(e) }
 function doPost(e) { return Sheetbase.HTTP.post(e) }
 
 // Step 2: initialize the library
-var app = Sheetbase.initialize();
+var app = Sheetbase.app();
 
 // Step 3: register routes
 app.get('/', function (req, res) {
-    return res.html('<h1>Hello world!</h1>'); // return some HTML
+    return res.send('Hello world!');
 });
 app.post('/', function (req, res) {
     return res.json({me: 'Hello world!'}); // return some JSON
@@ -107,9 +107,9 @@ Request object.
 Response object. See ``API > Response`` below.
 
 ```javascript
+    return res.send('Hello world!');
     return res.json({...});
-    return res.html('My HTML code');
-    return res.html('MyHTML', true);
+    return res.render(myTemplate, {foo: 'Foooo', bar: 'Barrr'});
 ```
 
 ### next
@@ -393,6 +393,14 @@ Get config by key
     var databaseId = Sheetbase.Config.get('databaseId');
 ```
 
++ set(key, value)
+
+Set config by key and value
+
+```javascript
+    Sheetbase.Config.set('view engine', 'handlebars');
+```
+
 
 
 ### AppError
@@ -476,12 +484,12 @@ Get request body, all or by key
 
 ### Response
 
-+ json(object)
++ send(any)
 
-Return JSON data
+Response text, HTML, object.
 
 ```javascript
-    return Sheetbase.Response.json({...});
+    return Sheetbase.Response.send('Hello!');
 ```
 
 + html(content, isFile)
@@ -492,20 +500,28 @@ Return HTML page
     return Sheetbase.Response.html('<h1>Hello world!</h1>');
 ```
 
++ render(template, data, viewEngine)
+
+Return templating HTML
+
+```javascript
+    return Sheetbase.Response.render(myTemplate, {myData: 'My Data'});
+```
+
++ json(object)
+
+Return JSON data
+
+```javascript
+    return Sheetbase.Response.json({...});
+```
+
 + standard(object)
 
 Return Sheetbase standard success data
 
 ```javascript
     return Sheetbase.Response.standard({...});
-```
-
-+ unauthorized()
-
-Return unauthorized message
-
-```javascript
-    return Sheetbase.Response.unauthorized();
 ```
 
 

@@ -20,6 +20,19 @@ var Config = (function (_Config) {
 
     /**
      * Set config
+     * @param {string} key - Configuration key
+     * @param {any} value - Configuration value
+     * @return {ConfigData}
+     * 
+    */
+    _Config.set = function(key, value) {
+        var _this = this;
+        var data = {}; data[key] = value;
+        return _this.set_(data);
+    }
+
+    /**
+     * Set config
      * @constructor
      * @param {object} data - Object of configuration data
      * @return {ConfigData} 

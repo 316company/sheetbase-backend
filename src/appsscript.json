@@ -12,8 +12,18 @@
       "version": "1"
     },
     {
-      "userSymbol": "Pluralize",
-      "libraryId": "13U-fcaWqa6zFHJzfr7X1AZmRi02sjoKbi-YqesHlGQAhqJoowsFEetcd",
+      "userSymbol": "ObjectPath",
+      "libraryId": "18RyfNNZL7UhRJP1BiDWeGv2Lb5WbWY9ngGkzN4jX3wIIJszGtIXr-cTg",
+      "version": "1"
+    },
+    {
+      "userSymbol": "Handlebars",
+      "libraryId": "1YMOO8goWg-PdL6c_bJdqqfmDwz4O-hi9R91PaJnESSaYO6zbsGhffC15",
+      "version": "1"
+    },
+    {
+      "userSymbol": "Ejs",
+      "libraryId": "1BC0uLTyD7-i0MWM15pOmO-MZ5T9Q6z4mIdZKSabW4HxQvOgJctod2_nf",
       "version": "1"
     }]
   },

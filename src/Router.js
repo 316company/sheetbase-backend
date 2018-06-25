@@ -3,7 +3,10 @@ var Router = (function (_Router) {
     _Router.routes_ = {};
     _Router.globalMiddlewares_ = [];
     _Router.routeMiddlewares_ = {};
-    
+
+    /**
+     * Use middlewares
+     */
     _Router.use = function() {
         var _this = this;
         var args = Array.prototype.slice.call(arguments, 0);
@@ -25,6 +28,10 @@ var Router = (function (_Router) {
 
     }
 
+
+    /**
+     * Register a GET+POST route
+     */
     _Router.all = function () {
         var _this = this;
         var args = Array.prototype.slice.call(arguments, 0);
@@ -40,6 +47,10 @@ var Router = (function (_Router) {
         _this.routeMiddlewares_['POST:'+ routeName] = args;
     }
 
+
+    /**
+     * Register a GET route
+     */
     _Router.get = function () {
         var _this = this;
         var args = Array.prototype.slice.call(arguments, 0);
@@ -53,6 +64,10 @@ var Router = (function (_Router) {
         _this.routeMiddlewares_['GET:'+ routeName] = args;
     }
 
+
+    /**
+     * Register a POST route
+     */
     _Router.post = function () {
         var _this = this;
         var args = Array.prototype.slice.call(arguments, 0);
