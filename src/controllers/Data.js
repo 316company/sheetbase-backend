@@ -1,30 +1,36 @@
 /**
- * Data Class
+ * Data
  * @namespace
  */
 var Data = (function (_Data) {
-
+    
     // TODO: Custom modifiers
 
-    _Data.get = function (tableName, customRange) {
+    _Data.get = function (path) {
         var _this = this;
-        
-        if(!tableName) return AppError.client(
-            'data/no-table-name',
-            'You must give the table name!'
+
+        if (!path) return AppError.client(
+            'data/no-data-path',
+            'You must give the data path!'
         );
-        
-        if(tableName.substr(0,1)==='_') return AppError.client(
+
+        // process the path
+        var pathSplits = path.split('/').filter(Boolean);
+        var masterPath = pathSplits.splice(0, 1)[0];
+
+        if (masterPath.substr(0,1) === '_') return AppError.client(
             'data/private-data',
             'Can not get private data!'
         );
-        
+
+        // get master data & return data
         var data = {};
         try {
             var spreadsheet = SpreadsheetApp.openById(Config.get('databaseId'));
-            var range = spreadsheet.getRange(tableName +'!'+ (customRange||'A1:ZZ'));
+            var range = spreadsheet.getRange(masterPath + '!A1:ZZ');
             var values = range.getValues();
-            data = _this.transform(values);
+            var masterData = _this._transform_(values);
+            data = ObjectPath.objectPath.get(masterData, pathSplits);
         } catch(error) {
             return AppError.server(
                 'data/unknown',
@@ -34,31 +40,93 @@ var Data = (function (_Data) {
         return data;
     }
 
-    _Data.update = function (tableName, data) {
+    _Data.object = function (path) {
         var _this = this;
-        
-        if(!tableName || !data) return AppError.client(
-            'data/missing-info',
-            'No \'table\' or \'data\'!'
+        return _this.get(path);
+    }
+
+    _Data.list = function (path) {
+        var _this = this;
+        var data = _this.get(path);
+        return !data.error ? Helper.o2a(data): data;
+    }
+
+    _Data.update = function (updates) {
+        var _this = this;
+
+        if (!updates) return AppError.client(
+            'data/no-data',
+            'You must give the updates!'
         );
 
-        // var tempDatabase = {};
+        var status = {};
+        var models = {};
+        var masterDataGroup = {};
+        for (var path in updates) {
+            var pathSplits = path.split('/').filter(Boolean);
+            var masterPath = pathSplits.splice(0, 1)[0];
+            var itemId = pathSplits[0];
 
+            if (!models[masterPath]) {
+                models[masterPath] = Model.get(masterPath);
+            }
+            if (!masterDataGroup[masterPath]) {
+                masterDataGroup[masterPath] = _this.get(masterPath);
+            }
 
-
-        // var Table = Model.get(tableName);
-
+            if (itemId) {
+                try {
+                    // update data in RAM
+                    ObjectPath.objectPath.set(masterDataGroup[masterPath], pathSplits, updates[path]);
         
-        
-        return data;
+                    // update in sheet
+                    var item = models[masterPath].where(function (itemInDB) {
+                        return (itemInDB['key'] === itemId) ||
+                        (itemInDB['slug'] === itemId) ||
+                        ((itemInDB['id'] + '') === itemId) ||
+                        ((itemInDB['#'] + '') === itemId);
+                    }).first();
+
+                    
+                    var updatedData = Object.assign({}, masterDataGroup[masterPath][itemId]);
+                    for (var key in updatedData) {
+                        if (updatedData[key] instanceof Object) {
+                            updatedData[key] = JSON.stringify(updatedData[key]);
+                        }
+                    }
+
+                    if (item) {
+                        Object.assign(item, updatedData);
+                    } else {
+                        item = models[masterPath].create(updatedData);
+                    }
+                    item.save();
+
+                    // update the status
+                    status[path] = true;
+                } catch(error) {
+                    // ignore the action
+                    status[path] = false;
+                }
+            } else {
+                // else: ignore the action
+                status[path] = false;
+            }
+        }
+
+        return {
+            status: status
+        };
     }
+
+
 
     /**
      * Turn [][] -> [{},{}, ...]
      * @param {Array} values - Data[][]
      * @param {boolean} noHeaders - Has header row?
      */
-    _Data.transform = function (values, noHeaders) {
+    _Data._transform_ = function (values, noHeaders) {
         var _this = this;
         var items = [];
 
@@ -78,7 +146,7 @@ var Data = (function (_Data) {
                     item[headers[j] || (headers[0] + j)] = val;
                 }
             }
-            if (Object.keys(item).length > 0) items.push(_this.finalize(item));
+            if (Object.keys(item).length > 0) items.push(_this._finalize_(item));
         }
         return Helper.a2o(items);
     }
@@ -89,7 +157,7 @@ var Data = (function (_Data) {
    * @param {object} item - Data in JSON
    * @return {object}
    */
-  _Data.finalize = function (item) {
+  _Data._finalize_ = function (item) {
     for (var key in item) {
       //transform JSON where possible
       try {
@@ -111,6 +179,6 @@ var Data = (function (_Data) {
     return item;
   }
 
-  return _Data;
+    return _Data;
 
 })(Data||{});

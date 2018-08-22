@@ -1,11 +1,11 @@
 Router.get('/data', Middleware.authorize, function (req, res) {
     return res.standard(
-        Data.get(req.params.table, req.params.range)
+        req.params.list ? Data.list(req.params.list): Data.get(req.params.object || req.params.path)
     );
 });
 
 Router.post('/data', Middleware.authorize, function (req, res) {
     return res.standard(
-        Data.update(req.body.table, req.body.data)
+        Data.update(req.body.updates)
     );
 });

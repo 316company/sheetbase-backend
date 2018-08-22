@@ -320,16 +320,37 @@ Get data.
 
 Params:
 
-    {
-        table: string,
-        range?: string
-    }
+    ?path||object=<path> // return an object
+    ?list=<path> // return an array
 
 Body: n/a
 
 Response data:
 
     Data
+
+---
+
++ POST ``/data``
+
+Get data.
+
+Params: n/a
+
+Body: 
+
+    {
+        <path-1>: <data-1>,
+        <path-2>: <data-2>,
+        <path-3>: <data-3>,
+        ...: ...
+    }
+
+Response data:
+
+    {
+        status: object
+    }
 
 
 
