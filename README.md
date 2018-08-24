@@ -392,14 +392,60 @@ Response data:
 
 
 
+
+
+### Mail
+
++ GET ``/mail/quota``
+
+Get daily quota.
+
+Params: n/a
+
+Body: n/a
+
+Response data:
+
+    {
+        remainingDailyQuota: number
+    }
+
+---
+
++ POST ``/mail``
+
+Send an email.
+
+Params: n/a
+
+Body: 
+
+    {
+        mailData: {
+            // See more: https://developers.google.com/apps-script/reference/gmail/gmail-app#sendEmail(String,String,String,Object)
+
+            recipient?: string,
+            subject?: string,
+            body?: string,
+            options?: any
+        },
+        transporter?: string // mailapp || gmail (default)
+    }
+
+Response data:
+
+    MailData
+
+
+
 ## API
 
-### initialize(config)
+### app(config)
 
 Init the library.
 
 ```javascript
-    var app = Sheetbase.initialize(SHEETBASE_CONFIG);
+    var app = Sheetbase.app(SHEETBASE_CONFIG);
 ```
 
 
@@ -591,7 +637,7 @@ Register a POST route
 
 + all(routeName, middleware1, ..., routeHandler)
 
-Register a POST route
+Register a GET and POST route
 
 ```javascript
     Sheetbase.Router.all('/', function (req, res) {
