@@ -1,3 +1,7 @@
+# ⛔️ DEPRECATED
+
+Please use [@sheetbase/core-server](https://github.com/sheetbase/core-server) instead.
+
 # Sheetbase Script Core
 
 Core Module to build Sheetbase Backend. Homepage: https://sheetbase.net
